@@ -46,6 +46,9 @@ static bool __multiTouch = false;
 static int __primaryTouchId = -1;
 static bool __displayKeyboard = false;
 
+static double __latitude = std::numeric_limits<double>::max();
+static double __longitude = std::numeric_limits<double>::max();
+
 // OpenGL VAO functions.
 static const char* __glExtensions;
 PFNGLBINDVERTEXARRAYOESPROC glBindVertexArray = NULL;
@@ -1807,6 +1810,14 @@ std::string Platform::displayFileDialog(size_t mode, const char* title, const ch
     return "";
 }
 
+double Platform::getLatitude() {
+    return __latitude;
+}
+
+double Platform::getLongitude() {
+    return __longitude;
+}
+
 }
 
 extern "C"
@@ -1831,7 +1842,14 @@ JNIEXPORT void JNICALL Java_org_gameplay3d_GamePlayNativeActivity_screenOrientat
     __orientationAngle = orientation * 90;
 }
 
+JNIEXPORT void JNICALL Java_org_gameplay3d_GamePlayNativeActivity_cacheLastLocation(JNIEnv* env, jclass clazz, jdouble latitude, jdouble longitude)
+{
+  __latitude = latitude;
+  __longitude = longitude;
 }
+
+}
+
 
 #endif
 #endif

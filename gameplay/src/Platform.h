@@ -439,6 +439,9 @@ public:
      */
     static void shutdownInternal();
 
+    static double getLatitude();
+    static double getLongitude();
+    
 private:
 
     Game* _game;                // The game this platform is interfacing with.

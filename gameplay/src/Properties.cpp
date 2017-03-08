@@ -6,6 +6,8 @@
 namespace gameplay
 {
 
+std::map<std::string, Properties*> __propertiesCache;
+    
 /**
  * Reads the next character from the stream. Returns EOF if the end of the stream is reached.
  */
@@ -76,6 +78,12 @@ Properties* Properties::create(const char* url)
 
     // Calculate the file and full namespace path from the specified url.
     std::string urlString = url;
+    std::map<std::string, Properties*>::iterator propertiesCacheIterator;
+    if ((propertiesCacheIterator = __propertiesCache.find(urlString)) != __propertiesCache.end()) {
+        Properties* propertiesCopy = new Properties(*propertiesCacheIterator->second);
+        return propertiesCopy;
+    }
+    
     std::string fileString;
     std::vector<std::string> namespacePath;
     calculateNamespacePath(urlString, fileString, namespacePath);
@@ -109,6 +117,8 @@ Properties* Properties::create(const char* url)
         SAFE_DELETE(properties);
     }
     p->setDirectoryPath(FileSystem::getDirectoryName(fileString.c_str()));
+    //Cache this properties file
+    __propertiesCache[urlString] = new Properties(*p);
     return p;
 }
 
